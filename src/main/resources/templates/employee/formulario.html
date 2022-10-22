@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">	
+</head>
+<body>
+	<div class="container">
+		<h1 class="jumbotron mb-2 display-4">Add an Employee</h1>
+		
+		<div class="card mb-3">
+		<!--th:object -> eu associo o formulário ao objeto do tipo EmployeeDto -->
+		<!--th:field -> associo o input ao atributo firstName do objeto employeeDto -->
+		<!--th:field substituiu o atributo 'name' dos inputs -->
+		<!--Nós efetuamos ambas as associações mencionadas acima para que a validação de inputs funcione adequadamente no formulário abaixo. -->
+			<form class="card-body" action="/employee/novo" method="POST" th:object="${employeeDto}">
+				<div class="form-group">
+					<label for="firstName">First Name:</label>
+					<input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{firstName}">
+					<div class="invalid-feedback" th:errors="*{firstName}"></div> <!--Imprime mensagem de erro associada ao atributo firstName-->
+				</div>
+				<div class="form-group">
+					<label for="middleName">Middle Name:</label>
+					<input class="form-control" type="text" th:field="*{middleName}">
+					<small>Not required.</small>
+				</div>
+				<div class="form-group">
+					<label for="lastName">Last Name:</label>
+					<input class="form-control" type="text" th:field="*{lastName}" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{lastName}"></div>
+				</div>
+				<div class="form-group">
+					<label for="birthDate">Birth Date:</label>
+					<input class="form-control" type="date" th:errorclass="is-invalid" th:field="*{birthDate}">
+					<div class="invalid-feedback" th:errors="*{birthDate}"></div>
+					<small>dia/mês/ano</small>
+				</div>
+				<div class="form-group">
+					<label for="position">Position:</label>
+					<input class="form-control" type="text" th:errorclass="is-invalid" th:field="*{position}">
+					<div class="invalid-feedback" th:errors="*{position}"></div>
+				</div>
+				<button class="btn btn-primary mb-3" type="submit">Add</button>
+				<div th:if="${feedback}">
+					<p class="text-success" th:text="${message}"></p>
+				</div>
+				<div th:unless="${feedback}">
+					<p class="text-danger">Não foi possível cadastrar o usuário. <span th:text="${message}"></span></p>
+				</div>
+			</form>
+		</div>
+	</div>
+
+</body>
+</html>
