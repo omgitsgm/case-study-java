@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="UTF-8">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body>
+	<div class="container">
+		<h1 class="jumbotron mb-2 display-4">Search Employees</h1>
+		
+		<div class="card mb-3">
+			<form class="card-body" action="/employee/search" method="GET">
+				<div class="form-group">
+					<label>First Name:</label>
+					<input class="form-control" type="text">
+				</div>
+				<div class="form-group">
+					<label>Last Name:</label>
+					<input class="form-control" type="text">
+				</div>
+				<div class="form-group">
+					<label>Position:</label>
+					<input class="form-control" type="text">
+				</div>
+				<button class="btn btn-primary mb-3" type="submit">Search</button>
+			</form>
+		</div>
+	</div>
+</body>

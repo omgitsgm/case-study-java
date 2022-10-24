@@ -41,12 +41,30 @@
 					<div class="invalid-feedback" th:errors="*{position}"></div>
 				</div>
 				<button class="btn btn-primary mb-3" type="submit">Add</button>
-				<div th:if="${feedback}">
-					<p class="text-success" th:text="${message}"></p>
+				<div th:switch="${valido}">
+					<p th:case="true" class="text-success">Funcionário cadastrado com sucesso!</p>
+					<div th:case="false" class="text-danger">
+						<p>Não foi possível cadastrar o usuário.</p>
+						<ul>
+							<div th:each="message : ${messages}">
+								<li th:text="${message}"></li>
+							</div>
+						</ul>
+						<p>Cheque as informações preenchidas no formulário e tente novamente.</p>
+					</div>
 				</div>
-				<div th:unless="${feedback}">
-					<p class="text-danger">Não foi possível cadastrar o usuário. <span th:text="${message}"></span></p>
+				<!-- 
+				<div th:if="${valido} == 'true'">
+					<p class="text-success">Funcionário cadastrado com sucesso!</p>
+				</div>  
+				<div class="text-danger" th:unless="${valido} == 'false'">
+					<p>Não foi possível cadastrar o usuário.</p>
+					<div th:each="message : ${messages}">
+						<p th:text="${message}"></p>
+					</div>
+					<p>Cheque as informações preenchidas no formulário e tente novamente.</p>
 				</div>
+				 -->
 			</form>
 		</div>
 	</div>

@@ -1,5 +1,7 @@
 package br.com.gm.mvc.empsys.controller;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -33,34 +35,73 @@ public class EmployeeController {
 		// O Spring checa se os dados em 'employeeDto' são válidos.
 		// O BindingResult nos informa quantos erros ocorreram.
 		
+	    ArrayList<String> errorMessages = new ArrayList<String>();
+	    boolean valido = true;
+	    
 		// Verifica a entrada de dados do usuário
 		System.out.println(result.getErrorCount() + " erro(s) detectado(s) durante a inserção do funcionário.");
 		if(result.hasErrors()) {
-			model.addAttribute("message", "Formulário preenchido incorretamente.");
-			model.addAttribute("feedback", false);
-			return "employee/formulario";
-		} 
-		Employee employee = employeeDto.toEmployee();
-		
-		/* Verifica se o funcionário cadastrado já existe */
-		List<Employee> employees = employeeRepository.findAll();
-		if(employees.contains(employee)) {
-			System.out.println("O funcionário não foi cadastrado, pois já está cadastrado.");
-			model.addAttribute("message", "Esse funcionário já existe.");
-			model.addAttribute("feedback", false);
-			return "employee/formulario";
+			errorMessages.add("O formulário foi preenchido incorretamente.");
+			valido = false;
+//			model.addAttribute("message", "Formulário preenchido incorretamente.");
+//			return "employee/formulario";
+		} else {
+		    Employee employee = employeeDto.toEmployee();
+		    
+		    /* Verifica se o funcionário cadastrado já existe */
+	        List<Employee> employees = employeeRepository.findAll();
+	        if(employees.contains(employee)) {
+	            System.out.println("Erro: O funcionário não foi cadastrado, pois já está cadastrado.");
+	            errorMessages.add("Esse funcionário já foi cadastrado.");
+	            valido = false;
+//	          model.addAttribute("message", "Esse funcionário já existe.");
+//	          model.addAttribute("feedback", false);
+//	          return "employee/formulario";
+	        }
+	        
+	        /* Verifica se a data de nascimento é maior do que a data atual */
+	        if(employee.getBirthDate().isAfter(LocalDate.now())) {
+	            System.out.println("Erro: A data de nascimento é maior do que a data atual.");
+	            errorMessages.add("A data de nascimento não pode ser maior do que a data atual.");
+	            valido = false;
+//	          model.addAttribute("message", "A data de nascimento não pode ser maior do que a data atual.");
+//	          model.addAttribute("feedback", false);
+	        } 
+	        
+	        /* Verifica se o funcionário cadastrado tem pelo menos 18 anos */
+	        if(employee.getBirthDate().plusYears(18).isAfter(LocalDate.now())) {
+	            System.out.println("Erro: o funcionário não tem 18 anos.");
+	            errorMessages.add("O funcionário deve ter pelo menos 18 anos.");
+	            valido = false;
+	        }
+	        
+	        if(valido) { // Caso de sucesso: entradas válidas e funcionário ainda não existe.
+	            employeeRepository.save(employee);
+	            System.out.println("O funcionário foi cadastrado com sucesso.");
+	        }
+	        
 		}
 		
-		/* Caso de sucesso: entradas válidas e funcionário ainda não existe. */
-		employeeRepository.save(employee);
-		model.addAttribute("feedback", true);
-		model.addAttribute("message", "Funcionário cadastrado com sucesso!");
-		System.out.println("O funcionário foi cadastrado com sucesso.");
-		
-		
-		
-		return"employee/formulario";
+		if(!valido) { // Em caso de invalidade, anexa as mensagens de erro na requisição.
+            model.addAttribute("messages", errorMessages);
+        }
+        
+        model.addAttribute("valido", valido);
+		return "employee/formulario";
 		
 	}
 	
+	
+	@GetMapping("/formulario-search")
+	public String formularioSearch() {
+	    
+	    return "employee/formulario-search";
+	}
+	
+	@GetMapping("/search")
+	public String search() {
+	    System.out.println("Procurando funcionário...");
+	    
+	    return "employee/formulario-search";
+	}
 }
