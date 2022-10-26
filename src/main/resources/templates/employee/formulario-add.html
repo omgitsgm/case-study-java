@@ -13,7 +13,7 @@
 		<!--th:field -> associo o input ao atributo firstName do objeto employeeDto -->
 		<!--th:field substituiu o atributo 'name' dos inputs -->
 		<!--Nós efetuamos ambas as associações mencionadas acima para que a validação de inputs funcione adequadamente no formulário abaixo. -->
-			<form class="card-body" action="/employee/novo" method="POST" th:object="${employeeDto}">
+			<form class="card-body" action="/employee/add" method="POST" th:object="${employeeDto}">
 				<div class="form-group">
 					<label for="firstName">First Name:</label>
 					<input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{firstName}">

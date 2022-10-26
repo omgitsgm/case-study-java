@@ -25,13 +25,13 @@ public class EmployeeController {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    @GetMapping("/formulario")
-    public String formulario(EmployeeDto employeeDto) {
-        return "employee/formulario";
+    @GetMapping("/formulario-add")
+    public String formularioAdd(EmployeeDto employeeDto) {
+        return "employee/formulario-add";
     }
 
-    @PostMapping("/novo")
-    public String novo(@Valid EmployeeDto employeeDto, BindingResult result, Model model) {
+    @PostMapping("/add")
+    public String add(@Valid EmployeeDto employeeDto, BindingResult result, Model model) {
         // O Spring checa se os dados em 'employeeDto' são válidos.
         // O BindingResult nos informa quantos erros ocorreram.
 
@@ -87,7 +87,7 @@ public class EmployeeController {
         }
 
         model.addAttribute("valido", valido);
-        return "employee/formulario";
+        return "employee/formulario-add";
 
     }
 
