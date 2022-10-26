@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
 import br.com.gm.mvc.empsys.model.Employee;
@@ -90,11 +89,30 @@ public class EmployeeDto {
 		
 		Employee employee = new Employee();
 		
-		employee.setFirstName(this.firstName);
-		employee.setMiddleName(this.middleName);
-		employee.setLastName(this.lastName);
-		employee.setBirthDate(LocalDate.parse(this.birthDate, formatter));
-		employee.setPosition(this.position);
+//		if(this.firstName == null || this.firstName.isBlank())
+//		    employee.setFirstName("");
+//		else
+		    employee.setFirstName(this.firstName);
+
+//		if(this.middleName == null || this.middleName.isBlank())
+//		    employee.setMiddleName("");
+//		else
+		    employee.setMiddleName(this.middleName);
+		
+//		if(this.lastName == null || this.lastName.isBlank())
+//            employee.setLastName("");
+//        else
+            employee.setLastName(this.lastName);
+		
+//		if(this.birthDate == null || this.birthDate.isBlank())
+//		    employee.setBirthDate(LocalDate.now());
+//		else
+		    employee.setBirthDate(LocalDate.parse(this.birthDate, formatter));
+		    
+//		if(this.position == null || this.position.isBlank())
+//		    employee.setPosition("");
+//		else
+		    employee.setPosition(this.position);
 		
 		return employee;
 	}

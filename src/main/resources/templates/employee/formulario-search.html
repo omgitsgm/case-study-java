@@ -8,21 +8,56 @@
 		<h1 class="jumbotron mb-2 display-4">Search Employees</h1>
 		
 		<div class="card mb-3">
-			<form class="card-body" action="/employee/search" method="GET">
+			<form class="card-body" action="/employee/search" method="GET" th:object="${employeeDto}">
 				<div class="form-group">
-					<label>First Name:</label>
-					<input class="form-control" type="text">
+					<label for="firstName">First Name:</label>
+					<input class="form-control" type="text" th:field="*{firstName}">
 				</div>
 				<div class="form-group">
-					<label>Last Name:</label>
-					<input class="form-control" type="text">
+					<label for="lastName">Last Name:</label>
+					<input class="form-control" type="text" th:field="*{lastName}">
 				</div>
 				<div class="form-group">
-					<label>Position:</label>
-					<input class="form-control" type="text">
+					<label for="position">Position:</label>
+					<input class="form-control" type="text" th:field="*{position}">
 				</div>
-				<button class="btn btn-primary mb-3" type="submit">Search</button>
+				<div class="mb-3">
+					<button class="btn btn-primary" type="submit">Search</button>
+					<button class="btn btn-secondary" type="reset">Clear</button>
+				</div>
+				<div th:if="${enviado}">
+					<div th:if="${size} == 0">
+						<p class="text-danger"><span th:text="${size}"></span> resultados obtidos!</p>
+					</div>
+					<div th:if="${size} != 0">
+						<p class="text-success"><span th:text="${size}"></span> resultado(s) obtido(s)!</p>
+					</div>
+				</div>	
 			</form>
 		</div>
+		
+		<div th:if="${enviado}">
+			<div th:if="${size} != 0">
+				<div th:each="employee : ${employees}">
+					<div class="col-6" style="float: left;">
+						<div class="card mb-2">
+							<div class="card-header">
+								<b>ID: <span th:text="${employee.id}"></span></b> 
+							</div>
+							<div class="card-body">
+								
+								<p>First Name: <span th:text="${employee.firstName}"></span></p>
+								<p>Last Name: <span th:text="${employee.lastName}"></span></p>
+								<p>Position: <span th:text="${employee.position}"></span></p>
+								
+								<a href="#" class="btn btn-outline-primary">Edit</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+			
+		
 	</div>
 </body>
