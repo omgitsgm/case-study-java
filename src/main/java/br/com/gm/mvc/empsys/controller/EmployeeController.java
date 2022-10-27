@@ -1,9 +1,15 @@
 package br.com.gm.mvc.empsys.controller;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,23 +104,80 @@ public class EmployeeController {
 
     @GetMapping("/search")
     public String search(EmployeeDto employeeDto, Model model) {
-        
+
         String firstName = employeeDto.getFirstName();
         String lastName = employeeDto.getLastName();
         String position = employeeDto.getPosition();
-        
+
         System.out.println("Criterios:" + firstName + "," + lastName + "," + position + ".");
 
-        
         List<Employee> employees = employeeRepository.searchByParametersWithCriteria(firstName, lastName, position);
-        System.out.println(employees);
-        System.out.println(employees.size());
-        
+        System.out.println("Resultados da busca: " + employees);
+        System.out.println("Quantidade de resultados: " + employees.size());
+
         model.addAttribute("employees", employees);
         model.addAttribute("size", employees.size());
         model.addAttribute("enviado", true);
-        
-       
+
         return "employee/formulario-search";
+    }
+
+    @GetMapping("/formulario-edit")
+    public String formularioEdit(EmployeeDto employeeDto, HttpServletRequest request, Model model)
+            throws ServletException, IOException {
+
+        String parameterId = request.getParameter("id");
+        Long id = Long.valueOf(parameterId);
+
+        Optional<Employee> optionalEmployee = employeeRepository.findById(id);
+        Employee employee = optionalEmployee.get();
+
+        System.out.println("Employee da requisicao: " + employee);
+
+        model.addAttribute("employee", employee);
+        /*
+         * request.setAttribute("employee", employee);
+         * request.setAttribute("enviado", true);
+         */
+
+        return "employee/formulario-edit";
+
+    }
+
+    @PostMapping("/edit")
+    public String edit(@Valid EmployeeDto employeeDto, BindingResult result, Model model, HttpServletRequest request) {
+        
+        // Pego o ID que veio com a requisição
+        String parameterId = request.getParameter("id");
+        Long id = Long.valueOf(parameterId);
+        
+        boolean valido = true;
+        
+        // Imprime a quantidade de erros ao preencher o formulário
+        System.out.println(result.getErrorCount() + " erro(s) ao preencher o formulario.");
+            
+        // Instancio um objeto Employee a partir do EmployeeDto
+        Employee employeeNovo = employeeDto.toEmployee();
+        // Defino o id desse objeto criado, como o id que eu recebi na requisição
+        employeeNovo.setId(id);
+        System.out.println("Employee Novo: " + employeeNovo);    
+        
+        
+        Employee employeeAntigo = employeeRepository.getReferenceById(id);
+        
+        System.out.println("Employee Antigo antes de editar: " + employeeAntigo);
+
+        employeeAntigo.setFirstName(employeeNovo.getFirstName());
+        employeeAntigo.setMiddleName(employeeNovo.getMiddleName());
+        employeeAntigo.setLastName(employeeNovo.getLastName());
+        employeeAntigo.setBirthDate(employeeNovo.getBirthDate());
+        employeeAntigo.setPosition(employeeNovo.getPosition());
+        
+        System.out.println("Employee Antigo depois de editar: " + employeeAntigo);
+
+        employeeRepository.save(employeeAntigo);
+        model.addAttribute("employee", employeeAntigo);
+        
+        return "employee/formulario-edit";
     }
 }
