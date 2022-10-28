@@ -146,38 +146,79 @@ public class EmployeeController {
 
     @PostMapping("/edit")
     public String edit(@Valid EmployeeDto employeeDto, BindingResult result, Model model, HttpServletRequest request) {
-        
-        // Pego o ID que veio com a requisição
+
+        // Definimos variáveis para auxiliar na validação
+        boolean valido = true;
+        List<String> errorMessages = new ArrayList<String>();
+
+        // Pegamos o parâmetro id da requisição
         String parameterId = request.getParameter("id");
         Long id = Long.valueOf(parameterId);
-        
-        boolean valido = true;
-        
-        // Imprime a quantidade de erros ao preencher o formulário
-        System.out.println(result.getErrorCount() + " erro(s) ao preencher o formulario.");
+
+        // Convertemos o EmployeeDto em Employee
+        Employee employeeForm = employeeDto.toEmployee();
+        employeeForm.setId(id);
+
+        /* CHECA OS INPUTS DO FORMULÁRIO */
+        if (result.hasErrors()) {
+            System.out.println(result.getErrorCount() + " erros encontrados no preenchimento do formulário.");
+            errorMessages.add(result.getErrorCount() + " errors found at form input.");
+            valido = false;
+        } else {
+
+            /* IDENTICAL EMPLOYEE FOUND */
+            List<Employee> employees = employeeRepository.findAll();
+            if (employees.contains(employeeForm)) {
+                System.out.println("ERROR: Identical employee found!");
+                errorMessages.add("Identical employee found.");
+                valido = false;
+            }
             
-        // Instancio um objeto Employee a partir do EmployeeDto
-        Employee employeeNovo = employeeDto.toEmployee();
-        // Defino o id desse objeto criado, como o id que eu recebi na requisição
-        employeeNovo.setId(id);
-        System.out.println("Employee Novo: " + employeeNovo);    
-        
-        
-        Employee employeeAntigo = employeeRepository.getReferenceById(id);
-        
-        System.out.println("Employee Antigo antes de editar: " + employeeAntigo);
+            /* Verifica se a data de nascimento é maior do que a data atual */
+            if (employeeForm.getBirthDate().isAfter(LocalDate.now())) {
+                System.out.println("Erro: A data de nascimento é maior do que a data atual.");
+                errorMessages.add("Birth date should not be later than current date.");
+                valido = false;
+//            model.addAttribute("message", "A data de nascimento não pode ser maior do que a data atual.");
+//            model.addAttribute("feedback", false);
+            }
 
-        employeeAntigo.setFirstName(employeeNovo.getFirstName());
-        employeeAntigo.setMiddleName(employeeNovo.getMiddleName());
-        employeeAntigo.setLastName(employeeNovo.getLastName());
-        employeeAntigo.setBirthDate(employeeNovo.getBirthDate());
-        employeeAntigo.setPosition(employeeNovo.getPosition());
-        
-        System.out.println("Employee Antigo depois de editar: " + employeeAntigo);
+            /* Verifica se o funcionário cadastrado tem pelo menos 18 anos */
+            if (employeeForm.getBirthDate().plusYears(18).isAfter(LocalDate.now())) {
+                System.out.println("Erro: o funcionário não tem 18 anos.");
+                errorMessages.add("Employee must be, at least, 18 years old.");
+                valido = false;
+            }
 
-        employeeRepository.save(employeeAntigo);
-        model.addAttribute("employee", employeeAntigo);
-        
+            /* CASO DE SUCESSO */
+            if (valido) {
+                // Pegamos a referência do objeto que deve ser alterado no banco de dados.
+                Employee employeeReference = employeeRepository.getReferenceById(id);
+
+                // Atualizamos os valores
+                employeeReference.setFirstName(employeeForm.getFirstName());
+                employeeReference.setMiddleName(employeeForm.getMiddleName());
+                employeeReference.setLastName(employeeForm.getLastName());
+                employeeReference.setBirthDate(employeeForm.getBirthDate());
+                employeeReference.setPosition(employeeForm.getPosition());
+
+                // Salvamos no banco de dados
+                employeeRepository.save(employeeReference);
+
+                // Adicionamos como atributo o objeto atualizado
+                model.addAttribute("employee", employeeReference);
+            }
+        }
+
+        if (!valido) {
+            // Adicionamos como atributo o objeto do formulário
+            model.addAttribute("employee", employeeForm);
+            // Adicionamos como atributo a lista de mensagens de erro.
+            model.addAttribute("errorMessages", errorMessages);
+        }
+
+        model.addAttribute("valido", valido);
+
         return "employee/formulario-edit";
     }
 }

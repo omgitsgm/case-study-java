@@ -16,25 +16,42 @@
 				</div>
 				<div class="form-group">
 					<label>First Name:</label>
-					<input class="form-control" type="text" th:value="${employee.firstName}" th:name="firstName" th:id="firstName">
+					<input class="form-control" type="text" th:value="${employee.firstName}" th:name="firstName" th:id="firstName" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{firstName}"></div>
 				</div>
 				<div class="form-group">
 					<label>Middle Name:</label>
-					<input class="form-control" type="text" th:value="${employee.middleName}" th:name="middleName" th:id="middleName">
+					<input class="form-control" type="text" th:value="${employee.middleName}" th:name="middleName" th:id="middleName" th:errorclass="is-invalid">
+					<small>Not required.</small>
 				</div>
 				<div class="form-group">
 					<label>Last Name:</label>
-					<input class="form-control" type="text" th:value="${employee.lastName}" th:name="lastName" th:id="lastName">
+					<input class="form-control" type="text" th:value="${employee.lastName}" th:name="lastName" th:id="lastName" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{lastName}"></div>
 				</div>
 				<div class="form-group">
 					<label>Birth Date:</label>
-					<input class="form-control" type="date" th:value="${employee.birthDate}" th:name="birthDate" th:id="birthDate">
+					<input class="form-control" type="date" th:value="${employee.birthDate}" th:name="birthDate" th:id="birthDate" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{birthDate}"></div>
 				</div>
 				<div class="form-group">
 					<label>Position:</label>
-					<input class="form-control" type="text" th:value="${employee.position}" th:name="position" th:id="position">
+					<input class="form-control" type="text" th:value="${employee.position}" th:name="position" th:id="position" th:errorclass="is-invalid">
+					<div class="invalid-feedback" th:errors="*{position}"></div>
 				</div>
-				<button class="btn btn-primary" type="submit">Save</button>
+				<button class="btn btn-primary mb-3" type="submit">Save</button>
+				<div th:if="${valido} == true">
+					<p class="text-success">Employee was successfully edited!</p>
+				</div>
+				<div th:if="${valido} == false" class="text-danger">
+					<p>Employee was not updated.</p>
+					<ul>
+						<div th:each="message : ${errorMessages}">
+							<li th:text="${message}"></li>
+						</div>
+					</ul>
+					<p>Please, check your inputs and try again.</p>
+				</div>
 			</form>
 		</div>
 	</div>
