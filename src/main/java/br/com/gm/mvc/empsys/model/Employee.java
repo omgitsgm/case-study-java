@@ -1,11 +1,15 @@
 package br.com.gm.mvc.empsys.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Employee {
@@ -19,6 +23,9 @@ public class Employee {
 	private String lastName; // required: yes
 	private LocalDate birthDate; // required: yes
 	private String position; // required: yes
+	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "employee", fetch = FetchType.LAZY)
+	private List<Compensation> compensations;
 
 	public Long getId() {
 		return id;

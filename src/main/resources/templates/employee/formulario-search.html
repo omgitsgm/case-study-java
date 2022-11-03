@@ -51,6 +51,7 @@
 								<p>Position: <span th:text="${employee.position}"></span></p>
 								
 								<a th:href="@{/employee/formulario-edit(id=${employee.id})}"><button class="btn btn-primary">Edit</button></a>
+								<a th:href="@{/compensation/formulario-add(id=${employee.id})}"><button class="btn btn-primary">Add Compensation</button></a>
 							</div>
 						</div>
 					</div>

@@ -40,7 +40,7 @@ public class EmployeeDto {
 	
 	@NotNull
 	@Pattern(regexp = "^\\S.*$", message="Este campo não pode estar em branco.")
-	@Pattern(regexp = "^.{2,20}$", message="''Position'' deve conter no mínimo 2 e no máximo 20 caracteres.")
+	@Pattern(regexp = "^.{2,50}$", message="''Position'' deve conter no mínimo 2 e no máximo 50 caracteres.")
 	@Pattern(regexp = "^[A-Z].*$", message="''Position'' deve iniciar com letra maiúscula.")
 	@Pattern(regexp = "^[A-Za-záàâãéèêíïóôõöúçñë ]*$", message="''First Name'' deve conter apenas caracteres válidos. [A-Z], [a-z], [áàâãéèêíïóôõöúçñë ]")
 	private String position;
