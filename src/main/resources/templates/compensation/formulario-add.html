@@ -8,7 +8,7 @@
 		<h1 class="jumbotron mb-2 display-4">Add Compensation Details</h1>
 		
 		<div class="card mb-3">
-			<form class="card-body" th:action="@{/compensantion/add(id=${id})}" method="POST" th:object="${compensationDto}">
+			<form class="card-body" th:action="@{/compensation/add(id=${id})}" method="POST" th:object="${compensationDto}">
 				
 				<div class="form-group">
 					<label for="id">Id</label>
@@ -39,7 +39,7 @@
 					<input class="form-control" type="date" th:field="*{date}">
 				</div>
 				
-				<button class="btn btn-primary">Add Compensation</button>
+				<button class="btn btn-primary" type="submit">Add Compensation</button>
 			</form>
 		</div>
 	</div>

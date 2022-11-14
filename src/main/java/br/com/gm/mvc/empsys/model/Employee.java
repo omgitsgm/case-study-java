@@ -74,6 +74,14 @@ public class Employee {
 	public void setPosition(String position) {
 		this.position = position;
 	}
+	
+	public void addCompensation(Compensation compensation) {
+	    compensations.add(compensation);
+	}
+	
+	public List<Compensation> getCompensations(){
+	    return compensations;
+	}
 
 	
 	@Override

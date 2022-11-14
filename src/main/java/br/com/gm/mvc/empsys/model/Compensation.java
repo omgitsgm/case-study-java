@@ -75,4 +75,10 @@ public class Compensation {
         this.employee = employee;
     }
 
+    @Override
+    public String toString() {
+        return "Compensation [id=" + id + ", type=" + type + ", amount=" + amount + ", description=" + description
+                + ", date=" + date + ", employee=" + employee + "]";
+    }
+
 }
